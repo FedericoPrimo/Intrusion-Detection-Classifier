@@ -1,47 +1,28 @@
-# Intrusion Detection Classifier
+# Network Intrusion Detection with Machine Learning
 
-End-to-end machine learning pipeline for intrusion detection, supporting both binary and multiclass classification.
+End-to-end **binary and multiclass network intrusion detection** on the KDD99 dataset, designed and implemented independently in Python.
 
-## 🎯 Project Goal
-The goal of this project is to design and evaluate a machine learning system capable of:
-- detecting network intrusions
-- classifying different types of attacks
-- comparing binary vs multiclass classification strategies
+## Results at a glance
 
-The project was developed for the Data Mining and Machine Learning course at the University of Pisa.
+| Metric | Result |
+| --- | --- |
+| Multiclass macro-F1 | **0.9754** on a held-out test set |
+| Input features | **41** per network connection |
+| Models compared | **3**: Random Forest, Logistic Regression, Linear SVM |
+| Model comparison | **5-fold** stratified cross-validation |
+| Random Forest tuning | **8** hyperparameter combinations × **3** folds = **24 fits** |
 
-## 🧩 Pipeline Overview
-The system follows a structured pipeline:
-1. **Preprocessing**
-   - data cleaning
-   - feature encoding
-   - normalization
-2. **Feature Selection**
-   - dimensionality reduction
-   - selection of relevant attributes
-3. **Model Training**
-   - binary classifier (normal vs intrusion)
-   - multiclass classifier (attack categories)
-4. **Hyperparameter Optimization**
-   - best parameters stored for reproducibility
-5. **Evaluation**
-   - performance comparison across tasks
+## Approach
 
-## 📂 Project Structure
-- `datasets/` – Input datasets
-- `preprocessing.py` – Data preprocessing logic
-- `feature_selection.py` – Feature selection methods
-- `rf_pipeline_binary.joblib` – Trained binary classifier pipeline
-- `rf_pipeline_multiclass.joblib` – Trained multiclass classifier pipeline
-- `best_rf_params_*.json` – Optimized hyperparameters
-- `gui.py` – Simple GUI for running the classifier
-- `progetto.ipynb` – Experimental notebook
-- `Project Documentation.pdf` – Detailed report
+1. **Preprocess:** encode categorical variables, log-transform skewed features, and scale numerical values.
+2. **Handle imbalance:** apply **SMOTENC** within training folds; use model-specific feature selection (feature importance or RFE).
+3. **Compare and tune:** evaluate three classifiers using macro-F1, then optimize Random Forest with grid search.
+4. **Evaluate:** test the selected pipeline on a separate held-out set; analyze confusion matrices and per-class F1-scores.
 
-## 🔍 Design Notes
-The project emphasizes:
-- separation between experimentation and production-ready code
-- reproducible ML experiments
-- explicit comparison between different classification strategies
+The optimized **Random Forest** achieved **0.9754 multiclass macro-F1**, outperforming the tested linear baselines. The experiments used a deduplicated dataset and kept the held-out test set separate from model selection.
 
-Saved pipelines allow inference without retraining models.
+## Limitations
+
+**KDD99 is a historical benchmark** with known redundancy and class-imbalance issues. Some rare attack classes were excluded from parts of the evaluation; these results do **not** establish performance on modern production traffic.
+
+For methodology, plots, and detailed evaluation, see the project's **Project Documentation.pdf**.
